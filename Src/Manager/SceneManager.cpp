@@ -4,7 +4,6 @@
 #include "../Scene/TitleScene.h"
 #include "../Scene/GameScene.h"
 #include "SystemManager.h"
-#include "Camera.h"
 #include "SceneManager.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
@@ -32,10 +31,6 @@ void SceneManager::Init(void)
 	// フェード機能の初期化
 	fader_ = new Fader();
 	fader_->Init();
-
-	// カメラの初期化
-	camera_ = new Camera();
-	camera_->Init();
 
 	isSceneChanging_ = false;
 
@@ -74,9 +69,6 @@ void SceneManager::Update(void)
 	{
 		// 各シーンの更新処理
 		scene_->Update();
-
-		// カメラの更新
-		camera_->Update();
 	}
 
 }
@@ -91,16 +83,8 @@ void SceneManager::Draw(void)
 	// 画面を初期化
 	ClearDrawScreen();
 
-	// カメラの設定
-	camera_->SetBeforeDraw();
-
 	// 各シーンの描画処理
 	scene_->Draw();
-
-	// カメラのデバック描画
-#ifdef _DEBUG
-	camera_->DrawDebug();
-#endif // _DEBUG
 
 	// 暗転・明転
 	fader_->Draw();
@@ -116,10 +100,6 @@ void SceneManager::Destroy(void)
 
 	// フェード機能の解放
 	delete fader_;
-
-	// カメラの解放
-	camera_->Release();
-	delete camera_;
 
 	// インスタンスのメモリ解放
 	delete instance_;
@@ -160,7 +140,6 @@ SceneManager::SceneManager(void)
 
 	scene_ = nullptr;
 	fader_ = nullptr;
-	camera_ = nullptr;
 
 	isSceneChanging_ = false;
 
@@ -199,6 +178,7 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	}
 
 	// 各シーンの初期化
+	scene_->Load();
 	scene_->Init();
 
 	ResetDeltaTime();

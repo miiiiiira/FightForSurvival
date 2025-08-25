@@ -1,15 +1,14 @@
 #pragma once
 
-class SceneBase
+class ObjectBase
 {
-
 public:
 
 	// コンストラクタ
-	SceneBase(void);
+	ObjectBase(void);
 
 	// デストラクタ
-	virtual ~SceneBase(void) = 0;
+	virtual ~ObjectBase(void) = 0;
 
 	// ロード処理
 	virtual void Load(void) = 0;
@@ -27,3 +26,4 @@ public:
 	virtual void Release(void) = 0;
 
 };
+

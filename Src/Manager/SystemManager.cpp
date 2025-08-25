@@ -28,6 +28,6 @@ void SystemManager::ResetGame()
 
 SystemManager::SystemManager(void)
 {
-	playerNum_ = 0;
+	sensitivity = 0.005f;
 	score_ = 0;
 }

@@ -121,6 +121,19 @@ public:
 	// ゲームスタートするトリガーが押された
 	bool PushStartKey(void);
 
+	// 移動キー
+	// 前
+	bool MoveFront(void);
+	// 後ろ
+	bool MoveBack(void);
+	// 左
+	bool MoveLeft(void);
+	// 右
+	bool MoveRight(void);
+
+	// ダッシュキー
+	bool MoveDash(void);
+
 private:
 
 	// キー情報

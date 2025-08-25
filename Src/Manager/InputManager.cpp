@@ -30,7 +30,14 @@ void InputManager::Init(void)
 	InputManager::GetInstance().Add(KEY_INPUT_N);
 	InputManager::GetInstance().Add(KEY_INPUT_Z);
 
+	// 移動キー
+	InputManager::GetInstance().Add(KEY_INPUT_W);
+	InputManager::GetInstance().Add(KEY_INPUT_A);
+	InputManager::GetInstance().Add(KEY_INPUT_S);
+	InputManager::GetInstance().Add(KEY_INPUT_D);
 
+	// ダッシュキー
+	InputManager::GetInstance().Add(KEY_INPUT_LSHIFT);
 
 	InputManager::MouseInfo info;
 
@@ -354,6 +361,31 @@ bool InputManager::IsPadBtnTrgUp(JOYPAD_NO no, JOYPAD_BTN btn) const
 bool InputManager::PushStartKey(void)
 {
 	return IsTrgDown(KEY_INPUT_SPACE);
+}
+
+bool InputManager::MoveFront(void)
+{
+	return IsNew(KEY_INPUT_W);
+}
+
+bool InputManager::MoveBack(void)
+{
+	return IsNew(KEY_INPUT_S);
+}
+
+bool InputManager::MoveLeft(void)
+{
+	return IsNew(KEY_INPUT_A);
+}
+
+bool InputManager::MoveRight(void)
+{
+	return IsNew(KEY_INPUT_D);
+}
+
+bool InputManager::MoveDash(void)
+{
+	return IsNew(KEY_INPUT_LSHIFT);
 }
 
 

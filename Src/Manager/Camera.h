@@ -1,6 +1,7 @@
 #pragma once
 
 #include <DxLib.h>
+#include "../Object/Player/Player.h"
 
 class Camera
 {
@@ -8,10 +9,7 @@ public:
 
 	// カメラの初期位置
 	static constexpr VECTOR DEFAULT_POS =
-	{ 3.0f, 305.0f, -440.0f };
-	// カメラの初期角度
-	static constexpr VECTOR DEFAULT_ANGLES =
-	{ 20.0f * DX_PI_F / 180.0f, 0.0f, 0.0f };
+	{ 3.0f, 305.0f, 300.0f };
 	// カメラクリップ：NEAR
 	static constexpr float CAMERA_NEAR = 3.0f;
 	// カメラクリップ：FAR
@@ -30,6 +28,7 @@ public:
 
 	// コンストラクタ
 	Camera(void);
+	Camera(const Player* player);
 	// デストラクタ
 	~Camera(void);
 
@@ -51,6 +50,8 @@ public:
 	void SetHitStop(void) { hitStopCounter_ = HIT_STOP_TIME; }
 private:
 
+	const Player* player_;
+
 	// カメラモード
 	MODE mode_;
 
@@ -67,7 +68,9 @@ private:
 	void SetBeforeDrawFixedPoint(void);
 	void SetBeforeDrawFree(void);
 
-	// カメラ揺らし
+	// カメラの移動
+	void MoveCamera(void);
+	// カメラ振動
 	void ShakeCamera(void);
 };
 

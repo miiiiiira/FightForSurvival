@@ -1,8 +1,13 @@
 #include <EffekseerForDXLib.h>
 #include "InputManager.h"
+#include "../Utility/AsoUtility.h"
 #include "Camera.h"
 
-Camera::Camera(void)
+Camera::Camera(void):player_(nullptr)
+{
+}
+
+Camera::Camera(const Player* player) :player_(player)
 {
 	// カメラの位置が x = 320.0f, y = 240.0f, z = (画面のサイズによって変化)、
 	// 注視点の位置は x = 320.0f, y = 240.0f, z = 1.0f
@@ -17,11 +22,15 @@ Camera::~Camera(void)
 void Camera::Init(void)
 {
 	pos_ = DEFAULT_POS;
-	angles_ = DEFAULT_ANGLES;
+	angles_ = AsoUtility::VECTOR_ZERO;
 }
 
 void Camera::Update(void)
 {
+	// カメラの移動
+	MoveCamera();
+
+	// カメラの振動
 	ShakeCamera();
 }
 
@@ -117,6 +126,21 @@ void Camera::SetBeforeDrawFree(void)
 
 }
 
+void Camera::MoveCamera(void)
+{
+	if (player_ == nullptr)
+	{
+		// 例外スロー対策
+		return;
+	}
+
+	pos_ = player_->GetPlayer().pos_;
+	angles_ = player_->GetPlayer().angles_;
+
+	// カメラ設定（座標を軸に回転量を反映させる）
+	SetCameraPositionAndTargetAndUpVec(pos_, angles_, VGet(0.0f, 1.0f, 0.0f));
+}
+
 void Camera::ShakeCamera(void)
 {
 	// 現在のカメラ座標を取得
@@ -137,9 +161,5 @@ void Camera::ShakeCamera(void)
 		pos_.y += shake;
 
 		hitStopCounter_--;
-	}
-	else
-	{
-		pos_ = DEFAULT_POS;
 	}
 }

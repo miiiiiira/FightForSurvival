@@ -18,10 +18,10 @@ public:
 	void ResetGame();
 
 	//人数を格納
-	void SetPlayerNum(const int num) { playerNum_ = num; }
+	void SetSensitivity(const float num) { sensitivity = num; }
 
 	//人数を返す
-	const int GetPlayerNum() const { return playerNum_; }
+	const float GetSensitivity() const { return sensitivity; }
 
 	//スコアを格納
 	void SetScore(const int score) { score_ = score; }
@@ -34,8 +34,8 @@ private:
 	// 静的インスタンス
 	static SystemManager* instance_;
 
-	//プレイヤー人数
-	int playerNum_;
+	// マウス感度
+	float sensitivity;
 
 	//スコア
 	int score_;

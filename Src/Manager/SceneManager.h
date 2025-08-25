@@ -2,7 +2,6 @@
 #include <chrono>
 class SceneBase;
 class Fader;
-class Camera;
 
 class SceneManager
 {
@@ -54,9 +53,6 @@ private:
 
 	// フェード
 	Fader* fader_;
-
-	// カメラ
-	Camera* camera_;
 
 	// 各種シーン
 	SceneBase* scene_;
