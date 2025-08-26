@@ -40,17 +40,21 @@ void Player::Init(void)
 
 	mouse_ = { 0,0 };
 
+	yaw_ = pitch_ = 0.0f;
+
 	// 他の場所で設定された感度入れる
 	sensitivity_ = SystemManager::GetInstance().GetSensitivity();
 }
 
 void Player::Update(void)
 {
-	// 移動
-	ProcessMove();
 
 	// 視点移動
 	ProcessAngle();
+	
+	// 移動
+	ProcessMove();
+
 }
 
 void Player::Draw(void)
@@ -67,72 +71,37 @@ void Player::Release(void)
 
 void Player::ProcessMove(void)
 {
+
 	InputManager& ins = InputManager::GetInstance();
 
-	// 移動方向
-	VECTOR moveDir = AsoUtility::VECTOR_ZERO;
+	// 水平方向の forward ベクトル（y成分を0にする）
+	VECTOR moveForward = VGet(
+		sin(yaw_),
+		0.0f,
+		cos(yaw_)
+	);
 
-	// 奥
-	if (ins.MoveFront()) { moveDir.z += 1.0f; }
-	// 手前
-	if (ins.MoveBack()) { moveDir.z -= 1.0f; }
-	// 左
-	if (ins.MoveLeft()) { moveDir.x -= 1.0f; }
-	// 右
-	if (ins.MoveRight()) { moveDir.x += 1.0f; }
+	// 水平方向の right ベクトル（y成分を0にする）
+	VECTOR moveRight = VGet(
+		cos(yaw_),
+		0.0f,
+		-sin(yaw_)
+	);
 
+	// 正規化
+	moveForward = VNorm(moveForward);
+	moveRight = VNorm(moveRight);
 
-	if (!AsoUtility::EqualsVZero(moveDir))
-	{
+	// 入力に応じてプレイヤーの位置を更新
+	if (ins.MoveFront()) { player_.pos_ = VAdd(player_.pos_, VScale(moveForward, player_.moveSpeed_)); }
+	if (ins.MoveBack()) { player_.pos_ = VSub(player_.pos_, VScale(moveForward, player_.moveSpeed_)); }
+	if (ins.MoveLeft()) { player_.pos_ = VSub(player_.pos_, VScale(moveRight, player_.moveSpeed_)); }
+	if (ins.MoveRight()) { player_.pos_ = VAdd(player_.pos_, VScale(moveRight, player_.moveSpeed_)); }
 
-		// ベクトルの大きさを計算
-		float length = sqrtf(moveDir.x * moveDir.x + moveDir.z * moveDir.z);
-
-		if (length == 0.0f)
-		{
-			moveDir.x = moveDir.z = 0.0f;
-		}
-
-		// 大きさで割って単位ベクトルにする
-		moveDir.x /= length;
-		moveDir.z /= length;
-
-		player_.moveDir_ = moveDir;
-
-		VECTOR movePow;
-
-		if (ins.MoveDash())
-		{
-			player_.moveSpeed_ = SPEED_MOVE_MAX;
-		}
-		else
-		{
-			player_.moveSpeed_ = SPEED_MOVE;
-		}
-
-		// 移動量を計算する(方向＊スピード)
-		movePow = VScale(moveDir, player_.moveSpeed_);
-
-		// 移動処理(座標＋移動量)
-		player_.pos_ = VAdd(player_.pos_, movePow);
-
-		// モデルに座標を設定
-		//MV1SetPosition(modelId_, pos_);
-
-		// 方向から角度を出す
-		//player_.angles_.y = atan2(moveDir.x, moveDir.z);
-
-		// モデルに向きを設定
-		//MV1SetRotationXYZ(modelId_, angles_);
-
-	}
 }
 
 void Player::ProcessAngle(void)
 {
-	// カメラの回転量
-	int yaw_ = 0,pitch_ = 0;
-
 	// 現在のマウス座標を取得
 	GetMousePoint(&mouse_.x, &mouse_.y);
 
@@ -154,8 +123,6 @@ void Player::ProcessAngle(void)
 		pitch_ = -1.5f;
 	}
 
-	// 回転量から実際に回転させる
-	player_.angles_.x = player_.pos_.x + sinf(yaw_) * cosf(pitch_);
-	player_.angles_.y = player_.pos_.y + sinf(pitch_);
-	player_.angles_.x = player_.pos_.z + cosf(yaw_) * cosf(pitch_);
+	//// マウスカーソルを画面中央に戻す
+	SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
 }

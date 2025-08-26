@@ -42,6 +42,8 @@ public:
 	void Release(void)override;
 
 	const Unit GetPlayer(void)const { return player_; }
+	const float GetYaw() const { return yaw_; }
+	const float GetPitch() const { return pitch_; }
 
 private:
 
@@ -50,6 +52,10 @@ private:
 
 	// マウスの座標
 	Vector2 mouse_;
+
+	// ヨー角、ピッチ角
+	float yaw_;
+	float pitch_;
 
 	// マウスの感度
 	float sensitivity_;

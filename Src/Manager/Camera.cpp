@@ -135,10 +135,11 @@ void Camera::MoveCamera(void)
 	}
 
 	pos_ = player_->GetPlayer().pos_;
-	angles_ = player_->GetPlayer().angles_;
 
-	// カメラ設定（座標を軸に回転量を反映させる）
-	SetCameraPositionAndTargetAndUpVec(pos_, angles_, VGet(0.0f, 1.0f, 0.0f));
+	// プレイヤーの角度をカメラの角度として設定
+	angles_.y = player_->GetYaw();
+	angles_.x = player_->GetPitch();
+
 }
 
 void Camera::ShakeCamera(void)
